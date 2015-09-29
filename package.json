@@ -2,7 +2,7 @@
   "name": "tiny-worker",
   "version": "0.1.0",
   "description": "Tiny WebWorker for Server",
-  "main": "lib/tiny-worker.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "grunt test"
   },
@@ -11,11 +11,10 @@
     "url": "https://github.com/avoidwork/tiny-worker.git"
   },
   "keywords": [
-    "es6",
-    "unboxed",
-    "promise",
-    "deferred",
-    "defer"
+    "web",
+    "worker",
+    "ps",
+    "webworker"
   ],
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "license": "BSD-3-Clause",
