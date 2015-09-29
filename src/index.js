@@ -1,9 +1,13 @@
-//const path = require("path");
+const path = require("path");
+const worker = require(path.join(__dirname, "worker.js"));
 
 function factory (arg) {
-	let fn = typeof arg === "function";
+	let fn = typeof arg === "function",
+		obj;
 
-	return fn;
+	obj = worker(arg, fn);
+
+	return obj;
 }
 
 module.exports = factory;
