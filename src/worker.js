@@ -43,12 +43,14 @@ process.once("message", function (obj) {
 	global.importScripts = function (...files) {
 		let script, scripts;
 
-		scripts = files.map(function (file) {
-			return fs.readFileSync(file, "utf8");
-		}).join("\n");
+		if (files.length > 0) {
+			scripts = files.map(function (file) {
+				return fs.readFileSync(file, "utf8");
+			}).join("\n");
 
-		script = vm.createScript(scripts);
-		script.runInThisContext();
+			script = vm.createScript(scripts);
+			script.runInThisContext();
+		}
 	};
 
 	Object.keys(global.self).forEach(function (key) {
