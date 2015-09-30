@@ -1,13 +1,49 @@
 const path = require("path");
-const worker = require(path.join(__dirname, "worker.js"));
+const fork = require("child_process").fork;
+const worker = path.join(__dirname, "worker.js");
+const events = /^(error|message)$/;
 
-function factory (arg) {
-	let fn = typeof arg === "function",
-		obj;
+class Worker {
+	constructor (arg) {
+		let isfn = typeof arg === "function",
+			input = isfn ? arg.toString() : arg;
 
-	obj = worker(arg, fn);
+		this.child = fork(worker);
+		this.onerror = undefined;
+		this.onmessage = undefined;
 
-	return obj;
+		this.child.on("error", e => {
+			if (this.onerror) {
+				this.onerror.call(this, e);
+			}
+		});
+
+		this.child.on("message", msg => {
+			if (this.onmessage) {
+				this.onmessage.call(this, JSON.parse(msg));
+			}
+		});
+
+		this.child.send({input: input, isfn: isfn});
+	}
+
+	addEventListener (event, fn) {
+		if (events.test(event)) {
+			this["on" + event] = fn;
+		}
+	}
+
+	close () {
+		this.child.kill();
+	}
+
+	postMessage (msg) {
+		this.child.send(JSON.stringify({data: msg}));
+	}
+
+	terminate () {
+		this.child.kill();
+	}
 }
 
-module.exports = factory;
+module.exports = Worker;
