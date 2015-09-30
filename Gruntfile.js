@@ -18,6 +18,9 @@ module.exports = function (grunt) {
 		eslint: {
 			target: ["src/*.js"]
 		},
+		nodeunit : {
+			all : ["test/*_test.js"]
+		},
 		watch : {
 			js : {
 				files : ["src/*.js"],
@@ -31,12 +34,13 @@ module.exports = function (grunt) {
 	});
 
 	// tasks
+	grunt.loadNpmTasks("grunt-contrib-nodeunit");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-babel");
 	grunt.loadNpmTasks("grunt-eslint");
 
 	// aliases
-	grunt.registerTask("test", ["eslint"]);
+	grunt.registerTask("test", ["eslint", "nodeunit"]);
 	grunt.registerTask("build", ["babel"]);
 	grunt.registerTask("default", ["build", "test"]);
 };

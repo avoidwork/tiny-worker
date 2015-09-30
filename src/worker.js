@@ -24,6 +24,9 @@ process.once("message", function (obj) {
 		sexp;
 
 	global.self = {
+		close: function () {
+			process.exit(0);
+		},
 		postMessage: function (msg) {
 			process.send(JSON.stringify({data: msg}));
 		},
