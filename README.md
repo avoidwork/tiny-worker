@@ -1,8 +1,6 @@
 # tiny-worker
 Tiny WebWorker for Server
 
-This is non-functional, it's just a place holder for 1.0.0!
-
 [![build status](https://secure.travis-ci.org/avoidwork/tiny-worker.svg)](http://travis-ci.org/avoidwork/tiny-worker)
 
 ## Example
