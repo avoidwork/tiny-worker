@@ -7,20 +7,19 @@ This is non-functional, it's just a place holder for 1.0.0!
 
 ## Example
 ```javascript
-var Worker = require('tiny-worker'),
-    worker;
-
-worker = new Worker(function () {
-  onmessage = function (ev) {
-    postMessage(ev.data);
-  };
+var Worker = require("tiny-worker");
+var worker = new Worker(function () {
+	self.onmessage = function (ev) {
+		postMessage(ev.data);
+	};
 });
 
 worker.onmessage = function (ev) {
-  console.log(ev.data);
+	console.log(ev.data);
+	worker.terminate();
 };
 
-worker.postMessage("Hello world!"); // "Hello world!" is logged to console after bouncing through the Worker
+worker.postMessage("Hello World!");
 ```
 
 ## Properties
