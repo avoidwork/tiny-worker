@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
-const noop = path.join(__dirname, "noop.js");
+const noop = require(path.join(__dirname, "noop.js"));
 
 function trim (arg) {
 	return arg.replace(/^(\s+|\t+|\n+)|(\s+|\t+|\n+)$/g, "");
@@ -56,11 +56,11 @@ process.once("message", function (obj) {
 	});
 
 	process.on("message", function (msg) {
-		global.self.onmessage(JSON.parse(msg));
+		(global.self.onmessage || global.onmessage || noop)(JSON.parse(msg));
 	});
 
 	process.on("error", function (err) {
-		global.self.onerror(err);
+		(global.self.onerror || global.onerror || noop)(err);
 	});
 
 	if (typeof exp === "function") {
