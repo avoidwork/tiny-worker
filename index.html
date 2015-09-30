@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>tiny-worker by avoidwork</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">tiny-worker</h1>
+      <h2 class="project-tagline">Tiny WebWorker for the Server</h2>
+      <a href="https://github.com/avoidwork/tiny-worker" class="btn">View on GitHub</a>
+      <a href="https://github.com/avoidwork/tiny-worker/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/avoidwork/tiny-worker/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="tiny-worker" class="anchor" href="#tiny-worker" aria-hidden="true"><span class="octicon octicon-link"></span></a>tiny-worker</h1>
+
+<p>Tiny WebWorker for Server</p>
+
+<p><a href="http://travis-ci.org/avoidwork/tiny-worker"><img src="https://secure.travis-ci.org/avoidwork/tiny-worker.svg" alt="build status"></a></p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<h4>
+<a id="creating-a-worker-from-a-file" class="anchor" href="#creating-a-worker-from-a-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a Worker from a file</h4>
+
+<p>The worker script:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c1">self</span>.<span class="pl-en">onmessage</span> <span class="pl-k">=</span> <span class="pl-k">function</span> (<span class="pl-smi">ev</span>) {
+    postMessage(ev.<span class="pl-c1">data</span>);
+};</pre></div>
+
+<p>The core script:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> Worker <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>tiny-worker<span class="pl-pds">"</span></span>);
+<span class="pl-k">var</span> worker <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Worker</span>(<span class="pl-s"><span class="pl-pds">"</span>repeat.js<span class="pl-pds">"</span></span>);
+
+<span class="pl-c1">worker</span>.<span class="pl-en">onmessage</span> <span class="pl-k">=</span> <span class="pl-k">function</span> (<span class="pl-smi">ev</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(ev.<span class="pl-c1">data</span>);
+    worker.terminate();
+};
+
+worker.postMessage(<span class="pl-s"><span class="pl-pds">"</span>Hello World!<span class="pl-pds">"</span></span>);</pre></div>
+
+<h4>
+<a id="creating-a-worker-from-a-function" class="anchor" href="#creating-a-worker-from-a-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a Worker from a Function</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> Worker <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>tiny-worker<span class="pl-pds">"</span></span>);
+<span class="pl-k">var</span> worker <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Worker</span>(<span class="pl-k">function</span> () {
+    <span class="pl-c1">self</span>.<span class="pl-en">onmessage</span> <span class="pl-k">=</span> <span class="pl-k">function</span> (<span class="pl-smi">ev</span>) {
+        postMessage(ev.<span class="pl-c1">data</span>);
+    };
+});
+
+<span class="pl-c1">worker</span>.<span class="pl-en">onmessage</span> <span class="pl-k">=</span> <span class="pl-k">function</span> (<span class="pl-smi">ev</span>) {
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(ev.<span class="pl-c1">data</span>);
+    worker.terminate();
+};
+
+worker.postMessage(<span class="pl-s"><span class="pl-pds">"</span>Hello World!<span class="pl-pds">"</span></span>);</pre></div>
+
+<h2>
+<a id="properties" class="anchor" href="#properties" aria-hidden="true"><span class="octicon octicon-link"></span></a>Properties</h2>
+
+<h4>
+<a id="onmessage" class="anchor" href="#onmessage" aria-hidden="true"><span class="octicon octicon-link"></span></a>onmessage</h4>
+
+<p>Message handler, accepts an <code>Event</code></p>
+
+<h4>
+<a id="onerror" class="anchor" href="#onerror" aria-hidden="true"><span class="octicon octicon-link"></span></a>onerror</h4>
+
+<p>Error handler, accepts an <code>Event</code></p>
+
+<h2>
+<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
+
+<h4>
+<a id="addeventlistenerevent-fn" class="anchor" href="#addeventlistenerevent-fn" aria-hidden="true"><span class="octicon octicon-link"></span></a>addEventListener(event, fn)</h4>
+
+<p>Adds an event listener</p>
+
+<h4>
+<a id="close" class="anchor" href="#close" aria-hidden="true"><span class="octicon octicon-link"></span></a>close()</h4>
+
+<p>Terminates the <code>Worker</code>, same as <code>terminate()</code></p>
+
+<h4>
+<a id="postmessage" class="anchor" href="#postmessage" aria-hidden="true"><span class="octicon octicon-link"></span></a>postMessage()</h4>
+
+<p>Broadcasts a message to the <code>Worker</code></p>
+
+<h4>
+<a id="terminate" class="anchor" href="#terminate" aria-hidden="true"><span class="octicon octicon-link"></span></a>terminate()</h4>
+
+<p>Terminates the <code>Worker</code></p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Copyright (c) 2015 Jason Mulligan
+Licensed under the BSD-3 license</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/avoidwork/tiny-worker">tiny-worker</a> is maintained by <a href="https://github.com/avoidwork">avoidwork</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
