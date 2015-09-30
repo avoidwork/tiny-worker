@@ -31,8 +31,17 @@ Message handler, accepts an `Event`
 Error handler, accepts an `Event`
 
 ## API
+#### addEventListener(event, fn)
+Adds an event listener
+
+#### close()
+Terminates the `Worker`, same as `terminate()`
+
 #### postMessage()
 Broadcasts a message to the `Worker`
+
+#### terminate()
+Terminates the `Worker`
 
 ## License
 Copyright (c) 2015 Jason Mulligan
