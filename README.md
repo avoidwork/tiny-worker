@@ -23,6 +23,7 @@ worker.onmessage = function (ev) {
 };
 
 worker.postMessage("Hello World!");
+```
 
 #### Creating a Worker from a Function
 ```javascript
