@@ -45,15 +45,14 @@ process.once("message", function (obj) {
 	global.require = require;
 
 	global.importScripts = function (...files) {
-		let script, scripts;
+		let scripts;
 
 		if (files.length > 0) {
 			scripts = files.map(function (file) {
 				return fs.readFileSync(file, "utf8");
 			}).join("\n");
 
-			script = vm.createScript(scripts);
-			script.runInThisContext();
+			vm.createScript(scripts).runInThisContext();
 		}
 	};
 
