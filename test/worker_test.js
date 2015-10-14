@@ -53,7 +53,7 @@ exports["inline script"] = {
 	}
 };
 
-exports["inline script"] = {
+exports["inline script - require"] = {
 	setUp: function (done) {
 		this.worker = new Worker(function () {
 			self.onmessage = function (ev) {
