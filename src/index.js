@@ -33,10 +33,6 @@ class Worker {
 		}
 	}
 
-	close () {
-		this.child.kill();
-	}
-
 	postMessage (msg) {
 		this.child.send(JSON.stringify({data: msg}));
 	}

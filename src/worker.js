@@ -20,8 +20,7 @@ function toFunction (arg) {
 
 // Bootstraps the Worker
 process.once("message", function (obj) {
-	let exp = obj.isfn ? toFunction(obj.input) : fs.readFileSync(obj.input, "utf8"),
-		sexp;
+	let exp = obj.isfn ? toFunction(obj.input) : fs.readFileSync(obj.input, "utf8");
 
 	global.self = {
 		close: function () {
@@ -42,6 +41,8 @@ process.once("message", function (obj) {
 			}
 		}
 	};
+
+	global.require = require;
 
 	global.importScripts = function (...files) {
 		let script, scripts;
@@ -71,7 +72,6 @@ process.once("message", function (obj) {
 	if (typeof exp === "function") {
 		exp();
 	} else {
-		sexp = vm.createScript(exp);
-		sexp.runInThisContext();
+		vm.createScript(exp).runInThisContext();
 	}
 });

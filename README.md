@@ -1,6 +1,8 @@
 # tiny-worker
 Tiny WebWorker for Server
 
+`require()` is available for flexible inline Worker scripts.
+
 [![build status](https://secure.travis-ci.org/avoidwork/tiny-worker.svg)](http://travis-ci.org/avoidwork/tiny-worker)
 
 ## Example
@@ -52,9 +54,6 @@ Error handler, accepts an `Event`
 ## API
 #### addEventListener(event, fn)
 Adds an event listener
-
-#### close()
-Terminates the `Worker`, same as `terminate()`
 
 #### postMessage()
 Broadcasts a message to the `Worker`
