@@ -29,8 +29,8 @@ process.once("message", function (obj) {
 		postMessage: function (msg) {
 			process.send(JSON.stringify({data: msg}));
 		},
-		onmessage: noop,
-		onerror: noop,
+		onmessage: undefined,
+		onerror: undefined,
 		addEventListener: function (event, fn) {
 			if (event === "message") {
 				global.onmessage = global.self.onmessage = fn;
