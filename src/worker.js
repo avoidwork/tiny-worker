@@ -61,11 +61,11 @@ process.once("message", function (obj) {
 	});
 
 	process.on("message", function (msg) {
-		(global.self.onmessage || global.onmessage || noop)(JSON.parse(msg));
+		(global.onmessage || global.self.onmessage || noop)(JSON.parse(msg));
 	});
 
 	process.on("error", function (err) {
-		(global.self.onerror || global.onerror || noop)(err);
+		(global.onerror || global.self.onerror || noop)(err);
 	});
 
 	if (typeof exp === "function") {

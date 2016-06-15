@@ -1,3 +1,3 @@
-self.onmessage = function (ev) {
+onmessage = function (ev) {
 	postMessage(ev.data);
 };

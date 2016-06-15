@@ -9,7 +9,7 @@ Tiny WebWorker for Server
 #### Creating a Worker from a file
 The worker script:
 ```javascript
-self.onmessage = function (ev) {
+onmessage = function (ev) {
 	postMessage(ev.data);
 };
 ```
