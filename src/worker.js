@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 const noop = require(path.join(__dirname, "noop.js"));
+const events = /^(error|message)$/;
 
 function trim (arg) {
 	return arg.replace(/^(\s+|\t+|\n+)|(\s+|\t+|\n+)$/g, "");
@@ -32,7 +33,9 @@ process.once("message", obj => {
 		onmessage: void 0,
 		onerror: void 0,
 		addEventListener: (event, fn) => {
-			global["on" + event] = global.self["on" + event] = fn;
+			if (events.test(event)) {
+				global["on" + event] = global.self["on" + event] = fn;
+			}
 		}
 	};
 
