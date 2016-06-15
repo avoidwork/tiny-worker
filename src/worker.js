@@ -19,36 +19,30 @@ function toFunction (arg) {
 }
 
 // Bootstraps the Worker
-process.once("message", function (obj) {
+process.once("message", obj => {
 	let exp = obj.isfn ? toFunction(obj.input) : fs.readFileSync(obj.input, "utf8");
 
 	global.self = {
-		close: function () {
+		close: () => {
 			process.exit(0);
 		},
-		postMessage: function (msg) {
+		postMessage: msg => {
 			process.send(JSON.stringify({data: msg}));
 		},
-		onmessage: noop,
-		onerror: noop,
-		addEventListener: function (event, fn) {
-			if (event === "message") {
-				global.onmessage = global.self.onmessage = fn;
-			}
-
-			if (event === "error") {
-				global.onerror = global.self.onerror = fn;
-			}
+		onmessage: void 0,
+		onerror: void 0,
+		addEventListener: (event, fn) => {
+			global["on" + event] = global.self["on" + event] = fn;
 		}
 	};
 
 	global.require = require;
 
-	global.importScripts = function (...files) {
+	global.importScripts = (...files) => {
 		let scripts;
 
 		if (files.length > 0) {
-			scripts = files.map(function (file) {
+			scripts = files.map(file => {
 				return fs.readFileSync(file, "utf8");
 			}).join("\n");
 
@@ -56,15 +50,15 @@ process.once("message", function (obj) {
 		}
 	};
 
-	Object.keys(global.self).forEach(function (key) {
+	Object.keys(global.self).forEach(key => {
 		global[key] = global.self[key];
 	});
 
-	process.on("message", function (msg) {
+	process.on("message", msg => {
 		(global.onmessage || global.self.onmessage || noop)(JSON.parse(msg));
 	});
 
-	process.on("error", function (err) {
+	process.on("error", err => {
 		(global.onerror || global.self.onerror || noop)(err);
 	});
 
