@@ -38,7 +38,7 @@ class Worker {
 	}
 
 	terminate () {
-		this.child.kill("SIGHUP");
+		this.child.kill("SIGINT");
 	}
 }
 
