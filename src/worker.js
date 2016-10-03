@@ -39,6 +39,8 @@ process.once("message", obj => {
 		}
 	};
 
+	global.__dirname = __dirname;
+	global.__filename = __filename;
 	global.require = require;
 
 	global.importScripts = (...files) => {
