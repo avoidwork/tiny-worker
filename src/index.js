@@ -19,8 +19,18 @@ class Worker {
 		});
 
 		this.child.on("message", msg => {
-			if (this.onmessage) {
-				this.onmessage.call(this, JSON.parse(msg));
+			const message = JSON.parse(msg);
+			let error;
+
+			if (!message.error && this.onmessage) {
+				this.onmessage.call(this, message);
+			}
+
+			if (message.error && this.onerror) {
+				error = new Error(message.error);
+				error.stack = message.stack;
+
+				this.onerror.call(this, error);
 			}
 		});
 

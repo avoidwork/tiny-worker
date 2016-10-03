@@ -21,7 +21,7 @@ function toFunction (arg) {
 
 // Bootstraps the Worker
 process.once("message", obj => {
-	let exp = obj.isfn ? toFunction(obj.input) : fs.readFileSync(obj.input, "utf8");
+	const exp = obj.isfn ? toFunction(obj.input) : fs.readFileSync(obj.input, "utf8");
 
 	global.self = {
 		close: () => {
@@ -31,7 +31,9 @@ process.once("message", obj => {
 			process.send(JSON.stringify({data: msg}));
 		},
 		onmessage: void 0,
-		onerror: void 0,
+		onerror: err => {
+			process.send(JSON.stringify({error: err.message, stack: err.stack}));
+		},
 		addEventListener: (event, fn) => {
 			if (events.test(event)) {
 				global["on" + event] = global.self["on" + event] = fn;
@@ -60,7 +62,11 @@ process.once("message", obj => {
 	});
 
 	process.on("message", msg => {
-		(global.onmessage || global.self.onmessage || noop)(JSON.parse(msg));
+		try {
+			(global.onmessage || global.self.onmessage || noop)(JSON.parse(msg));
+		} catch (err) {
+			(global.onerror || global.self.onerror || noop)(err);
+		}
 	});
 
 	process.on("error", err => {

@@ -53,6 +53,36 @@ exports["inline script"] = {
 	}
 };
 
+exports["inline script - error"] = {
+	setUp: function (done) {
+		this.worker = new Worker(function () {
+			self.onmessage = function (ev) {
+				throw new Error(ev.data);
+			};
+		});
+		this.msg = "Something went wrong";
+		this.response = "";
+
+		done();
+	},
+	test: function (test) {
+		var self = this;
+
+		test.expect(3);
+		test.notEqual(this.msg, this.response, "Should not match");
+
+		this.worker.onerror = function (err) {
+			self.response = err.message;
+			self.worker.terminate();
+			test.equal(self.msg, self.response, "Should be a match");
+			test.notEqual(err.stack, undefined, "Should not be a match");
+			test.done();
+		};
+
+		this.worker.postMessage(this.msg);
+	}
+};
+
 exports["inline script - require"] = {
 	setUp: function (done) {
 		this.worker = new Worker(function () {
