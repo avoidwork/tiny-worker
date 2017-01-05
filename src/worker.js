@@ -51,7 +51,7 @@ process.once("message", obj => {
 		}
 	};
 
-	Reflect.ownKeys(global.self).forEach(key => {
+	Object.keys(global.self).forEach(key => {
 		global[key] = global.self[key];
 	});
 
