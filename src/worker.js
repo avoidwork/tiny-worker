@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const vm = require("vm");
-const noop = require(path.join(__dirname, "noop.js"));
-const events = /^(error|message)$/;
+const fs = require("fs"),
+	path = require("path"),
+	vm = require("vm"),
+	noop = require(path.join(__dirname, "noop.js")),
+	events = /^(error|message)$/;
 
 function trim (arg) {
 	return arg.replace(/^(\s+|\t+|\n+)|(\s+|\t+|\n+)$/g, "");
@@ -13,7 +13,7 @@ function explode (arg) {
 }
 
 function toFunction (arg) {
-	let args = trim(arg.replace(/^.*\(/, "").replace(/[\t|\r|\n|\"|\']+/g, "").replace(/\).*/, "")),
+	const args = trim(arg.replace(/^.*\(/, "").replace(/[\t|\r|\n|\"|\']+/g, "").replace(/\).*/, "")),
 		body = trim(arg.replace(/^.*\{/, "").replace(/\}$/, ""));
 
 	return Function.apply(Function, explode(args).concat([body]));
@@ -28,11 +28,11 @@ process.once("message", obj => {
 			process.exit(0);
 		},
 		postMessage: msg => {
-			process.send(JSON.stringify({data: msg}));
+			process.send(JSON.stringify({data: msg}, null, 0));
 		},
 		onmessage: void 0,
 		onerror: err => {
-			process.send(JSON.stringify({error: err.message, stack: err.stack}));
+			process.send(JSON.stringify({error: err.message, stack: err.stack}, null, 0));
 		},
 		addEventListener: (event, fn) => {
 			if (events.test(event)) {
@@ -46,18 +46,12 @@ process.once("message", obj => {
 	global.require = require;
 
 	global.importScripts = (...files) => {
-		let scripts;
-
 		if (files.length > 0) {
-			scripts = files.map(file => {
-				return fs.readFileSync(file, "utf8");
-			}).join("\n");
-
-			vm.createScript(scripts).runInThisContext();
+			vm.createScript(files.map(file => fs.readFileSync(file, "utf8")).join("\n")).runInThisContext();
 		}
 	};
 
-	Object.keys(global.self).forEach(key => {
+	Reflect.ownKeys(global.self).forEach(key => {
 		global[key] = global.self[key];
 	});
 

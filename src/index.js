@@ -1,14 +1,14 @@
-const path = require("path");
-const fork = require("child_process").fork;
-const worker = path.join(__dirname, "worker.js");
-const events = /^(error|message)$/;
+const path = require("path"),
+	fork = require("child_process").fork,
+	worker = path.join(__dirname, "worker.js"),
+	events = /^(error|message)$/;
 
 class Worker {
-	constructor (arg) {
+	constructor (arg, args = undefined, options = undefined) {
 		let isfn = typeof arg === "function",
 			input = isfn ? arg.toString() : arg;
 
-		this.child = fork(worker);
+		this.child = fork(worker, args, options);
 		this.onerror = undefined;
 		this.onmessage = undefined;
 

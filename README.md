@@ -1,7 +1,7 @@
 # tiny-worker
 Tiny WebWorker for Server
 
-`require()` is available for flexible inline Worker scripts.
+`require()` is available for flexible inline Worker scripts. Optional parameters `args` Array & `options` Object; see `child_process.fork()` documentation.
 
 [![build status](https://secure.travis-ci.org/avoidwork/tiny-worker.svg)](http://travis-ci.org/avoidwork/tiny-worker)
 
