@@ -41,7 +41,7 @@ process.once("message", obj => {
 		}
 	};
 
-	global.__dirname = __dirname;
+	global.__dirname = obj.cwd;
 	global.__filename = __filename;
 	global.require = require;
 

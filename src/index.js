@@ -4,9 +4,13 @@ const path = require("path"),
 	events = /^(error|message)$/;
 
 class Worker {
-	constructor (arg, args = undefined, options = undefined) {
+	constructor (arg, args = undefined, options = {cwd: process.cwd()}) {
 		let isfn = typeof arg === "function",
 			input = isfn ? arg.toString() : arg;
+
+		if (!options.cwd) {
+			options.cwd = process.cwd();
+		}
 
 		this.child = fork(worker, args, options);
 		this.onerror = undefined;
@@ -34,7 +38,7 @@ class Worker {
 			}
 		});
 
-		this.child.send({input: input, isfn: isfn});
+		this.child.send({input: input, isfn: isfn, cwd: options.cwd});
 	}
 
 	addEventListener (event, fn) {

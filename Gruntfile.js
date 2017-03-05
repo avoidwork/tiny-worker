@@ -1,9 +1,10 @@
 module.exports = function (grunt) {
 	grunt.initConfig({
-		pkg : grunt.file.readJSON("package.json"),
+		pkg: grunt.file.readJSON("package.json"),
 		babel: {
 			options: {
-				sourceMap: false
+				sourceMap: false,
+				presets: ["babel-preset-es2015"]
 			},
 			dist: {
 				files: [{
@@ -16,19 +17,23 @@ module.exports = function (grunt) {
 			}
 		},
 		eslint: {
-			target: ["src/*.js"]
+			target: [
+				"Gruntfile.js",
+				"src/*.js",
+				"test/*_test.js"
+			]
 		},
-		nodeunit : {
-			all : ["test/*_test.js"]
+		nodeunit: {
+			all: ["test/*_test.js"]
 		},
-		watch : {
-			js : {
-				files : ["src/*.js"],
-				tasks : "default"
+		watch: {
+			js: {
+				files: ["src/*.js"],
+				tasks: "default"
 			},
 			pkg: {
-				files : "package.json",
-				tasks : "default"
+				files: "package.json",
+				tasks: "default"
 			}
 		}
 	});
