@@ -48,7 +48,7 @@ class Worker {
 	}
 
 	postMessage (msg) {
-		this.child.send(JSON.stringify({data: msg}));
+		this.child.send(JSON.stringify({data: msg}, null, 0));
 	}
 
 	terminate () {
