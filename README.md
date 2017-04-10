@@ -61,6 +61,12 @@ Broadcasts a message to the `Worker`
 #### terminate()
 Terminates the `Worker`
 
+## FAQ
+1. I have an orphaned child process that lives on past the parent process' lifespan
+  * Most likely a `SIGTERM` is not reaching the child process
+2. How do insure all process are terminated?
+  * In your core script register a listener for `SIGTERM` via `process.on()` which terminates (all) worker process(es) and then gracefully shutdowns via `process.exit(0);`
+
 ## License
 Copyright (c) 2015 Jason Mulligan
 Licensed under the BSD-3 license
