@@ -12,6 +12,27 @@ class Worker {
 			options.cwd = process.cwd();
 		}
 
+		//get all debug related parameters
+		var debugVars = process.execArgv.filter(execArg => {
+			return (/(debug|inspect)/).test(execArg);
+		});
+		if (debugVars.lenght > 0) {
+			if (!options.execArgv) { //if no execArgs are given copy all arguments
+				debugVars = process.execArgv;
+				options.execArgv = [];
+			}
+
+			let portIndex = debugVars.findIndex(debugArg => { //get index of debug port specifier
+				return (/^--(debug|inspect)(-brk)?\d*/).test(debugArg);
+			});
+
+			if (portIndex > 0) { //set new port, ignore "-brk", it doesn't work
+				debugVars[portIndex] = ((/^--debug/).test(debugVars[portIndex]) ? "--debug=" : "--inspect=") + process.debugPort + 1;
+			}
+			options.execArgv = options.execArgv.concat(debugVars);
+
+		}
+
 		this.child = fork(worker, args, options);
 		this.onerror = undefined;
 		this.onmessage = undefined;
