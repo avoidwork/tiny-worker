@@ -23,7 +23,7 @@ class Worker {
 			}
 
 			let portIndex = debugVars.findIndex(debugArg => { //get index of debug port specifier
-				return (/^--(debug|inspect)(-brk)?\d*/).test(debugArg);
+				return (/^--(debug|inspect)(-brk)?(=\d+)?$/).test(debugArg);
 			});
 
 			if (portIndex >= 0) { //set new port, ignore "-brk", it doesn't work
