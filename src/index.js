@@ -26,7 +26,7 @@ class Worker {
 				return (/^--(debug|inspect)(-brk)?\d*/).test(debugArg);
 			});
 
-			if (portIndex > 0) { //set new port, ignore "-brk", it doesn't work
+			if (portIndex >= 0) { //set new port, ignore "-brk", it doesn't work
 				debugVars[portIndex] = ((/^--debug/).test(debugVars[portIndex]) ? "--debug=" : "--inspect=") + (process.debugPort + 1);
 			}
 			options.execArgv = options.execArgv.concat(debugVars);
