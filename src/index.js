@@ -17,7 +17,7 @@ class Worker {
 		var debugVars = process.execArgv.filter(execArg => {
 			return (/(debug|inspect)/).test(execArg);
 		});
-		if (debugVars.length > 0) {
+		if (debugVars.length > 0 && !options.noDebugRedirection) {
 			if (!options.execArgv) { //if no execArgs are given copy all arguments
 				debugVars = process.execArgv;
 				options.execArgv = [];
@@ -49,6 +49,8 @@ class Worker {
 			options.execArgv = options.execArgv.concat(debugVars);
 
 		}
+
+		delete options.noDebugRedirection;
 
 		this.child = fork(worker, args, options);
 		this.onerror = undefined;
