@@ -16,7 +16,7 @@ class Worker {
 		var debugVars = process.execArgv.filter(execArg => {
 			return (/(debug|inspect)/).test(execArg);
 		});
-		if (debugVars.lenght > 0) {
+		if (debugVars.length > 0) {
 			if (!options.execArgv) { //if no execArgs are given copy all arguments
 				debugVars = process.execArgv;
 				options.execArgv = [];
@@ -27,7 +27,7 @@ class Worker {
 			});
 
 			if (portIndex > 0) { //set new port, ignore "-brk", it doesn't work
-				debugVars[portIndex] = ((/^--debug/).test(debugVars[portIndex]) ? "--debug=" : "--inspect=") + process.debugPort + 1;
+				debugVars[portIndex] = ((/^--debug/).test(debugVars[portIndex]) ? "--debug=" : "--inspect=") + (process.debugPort + 1);
 			}
 			options.execArgv = options.execArgv.concat(debugVars);
 
