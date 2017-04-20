@@ -1,7 +1,8 @@
 const path = require("path"),
 	fork = require("child_process").fork,
 	worker = path.join(__dirname, "worker.js"),
-	events = /^(error|message)$/;
+	events = /^(error|message)$/,
+	defaultPorts = {inspect: 9229, debug: 5858};
 
 class Worker {
 	constructor (arg, args = undefined, options = {cwd: process.cwd()}) {
@@ -11,6 +12,45 @@ class Worker {
 		if (!options.cwd) {
 			options.cwd = process.cwd();
 		}
+
+		//get all debug related parameters
+		var debugVars = process.execArgv.filter(execArg => {
+			return (/(debug|inspect)/).test(execArg);
+		});
+		if (debugVars.length > 0 && !options.noDebugRedirection) {
+			if (!options.execArgv) { //if no execArgs are given copy all arguments
+				debugVars = process.execArgv;
+				options.execArgv = [];
+			}
+
+			let inspectIndex = debugVars.findIndex(debugArg => { //get index of inspect parameter
+				return (/^--inspect(-brk)?(=\d+)?$/).test(debugArg);
+			});
+
+			let debugIndex = debugVars.findIndex(debugArg => { //get index of debug parameter
+				return (/^--debug(-brk)?(=\d+)?$/).test(debugArg);
+			});
+
+			let portIndex = inspectIndex >= 0 ? inspectIndex : debugIndex; //get index of port, inspect has higher priority
+
+			if (portIndex >= 0) {
+				var match = (/^--(debug|inspect)(?:-brk)?(?:=(\d+))?$/).exec(debugVars[portIndex]); //get port
+				var port = defaultPorts[match[1]];
+				if (match[2]) {
+					port = parseInt(match[2]);
+				}
+				debugVars[portIndex] = "--" + match[1] + "=" + (port + 1); //new parameter
+
+				if (debugIndex >= 0 && debugIndex !== portIndex) { //remove "-brk" from debug if there
+					match = (/^(--debug)(?:-brk)?(.*)/).exec(debugVars[debugIndex]);
+					debugVars[debugIndex] = match[1] + (match[2] ? match[2] : "");
+				}
+			}
+			options.execArgv = options.execArgv.concat(debugVars);
+
+		}
+
+		delete options.noDebugRedirection;
 
 		this.child = fork(worker, args, options);
 		this.onerror = undefined;
