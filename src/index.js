@@ -3,6 +3,7 @@ const path = require("path"),
 	worker = path.join(__dirname, "worker.js"),
 	events = /^(error|message)$/,
 	defaultPorts = {inspect: 9229, debug: 5858};
+let forkedChilds = 0;
 
 class Worker {
 	constructor (arg, args = undefined, options = {cwd: process.cwd()}) {
@@ -19,7 +20,7 @@ class Worker {
 		});
 		if (debugVars.length > 0 && !options.noDebugRedirection) {
 			if (!options.execArgv) { //if no execArgs are given copy all arguments
-				debugVars = process.execArgv;
+				debugVars = Array.from(process.execArgv);
 				options.execArgv = [];
 			}
 
@@ -39,7 +40,8 @@ class Worker {
 				if (match[2]) {
 					port = parseInt(match[2]);
 				}
-				debugVars[portIndex] = "--" + match[1] + "=" + (port + 1); //new parameter
+				debugVars[portIndex] = "--" + match[1] + "=" + (port + 1 + forkedChilds); //new parameter
+				forkedChilds++;
 
 				if (debugIndex >= 0 && debugIndex !== portIndex) { //remove "-brk" from debug if there
 					match = (/^(--debug)(?:-brk)?(.*)/).exec(debugVars[debugIndex]);
