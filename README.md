@@ -44,6 +44,43 @@ worker.onmessage = function (ev) {
 worker.postMessage("Hello World!");
 ```
 
+# Debugging
+To be able to debug a child process, it must have a differnt debug port than the parent. 
+Tiny worker does this by adding a random port within a range to the parents debug port.
+The default Range is `[1, 300]`, it can be changed with the `setRange(min, max)` method.
+To disable any automatic port redirection set `options.noDebugRedirection = true`.
+
+### automatic redirection
+```javascript
+//parent is started with '--debug=1234'
+var Worker = require("tiny-worker");
+Worker.setRange(2, 20);
+
+var worker = new Worker(function () {
+	postMessage(process.debugPort); 
+});
+
+worker.onmessage = function (ev) {
+	console.log(ev.data); //prints any number between 1236 and 1254
+	worker.terminate();
+}
+```
+
+### manual redirection
+```javascript
+//parent is started with '--debug=1234'
+var Worker = require("tiny-worker");
+
+var worker = new Worker(function () {
+	postMessage(process.debugPort); 
+}, [], {noDebugRedirection: true, execArgv: ["--debug=1235"]});
+
+worker.onmessage = function (ev) {
+	console.log(ev.data); //prints 1235
+	worker.terminate();
+}
+```
+
 ## Properties
 #### onmessage
 Message handler, accepts an `Event`
@@ -60,6 +97,10 @@ Broadcasts a message to the `Worker`
 
 #### terminate()
 Terminates the `Worker`
+
+#### static setRange(min, max)
+Sets range for debug ports, only affects current process.
+Returns true if successful.
 
 ## FAQ
 1. I have an orphaned child process that lives on past the parent process' lifespan
