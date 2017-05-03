@@ -3,9 +3,10 @@ const path = require("path"),
 	worker = path.join(__dirname, "worker.js"),
 	events = /^(error|message)$/,
 	defaultPorts = {inspect: 9229, debug: 5858};
+let range = {min: 1, max: 300};
 
 class Worker {
-	constructor (arg, args = undefined, options = {cwd: process.cwd()}) {
+	constructor (arg, args = [], options = {cwd: process.cwd()}) {
 		let isfn = typeof arg === "function",
 			input = isfn ? arg.toString() : arg;
 
@@ -19,7 +20,7 @@ class Worker {
 		});
 		if (debugVars.length > 0 && !options.noDebugRedirection) {
 			if (!options.execArgv) { //if no execArgs are given copy all arguments
-				debugVars = process.execArgv;
+				debugVars = Array.from(process.execArgv);
 				options.execArgv = [];
 			}
 
@@ -39,7 +40,7 @@ class Worker {
 				if (match[2]) {
 					port = parseInt(match[2]);
 				}
-				debugVars[portIndex] = "--" + match[1] + "=" + (port + 1); //new parameter
+				debugVars[portIndex] = "--" + match[1] + "=" + (port + range.min + Math.floor(Math.random() * (range.max - range.min))); //new parameter
 
 				if (debugIndex >= 0 && debugIndex !== portIndex) { //remove "-brk" from debug if there
 					match = (/^(--debug)(?:-brk)?(.*)/).exec(debugVars[debugIndex]);
@@ -79,6 +80,16 @@ class Worker {
 		});
 
 		this.child.send({input: input, isfn: isfn, cwd: options.cwd});
+	}
+
+	static setRange (min, max) {
+		if (min >= max) {
+			return false;
+		}
+		range.min = min;
+		range.max = max;
+
+		return true;
 	}
 
 	addEventListener (event, fn) {
