@@ -4,17 +4,9 @@ const fs = require("fs"),
 	noop = require(path.join(__dirname, "noop.js")),
 	events = /^(error|message)$/;
 
-function trim (arg) {
-	return arg.replace(/^(\s+|\t+|\n+)|(\s+|\t+|\n+)$/g, "");
-}
-
-function explode (arg) {
-	return trim(arg).split(new RegExp("\\s*,\\s*"));
-}
-
 function toFunction (arg) {
 	var __worker_evaluated_function_ = null;
-	eval('__worker_evaluated_function_ = (' + arg + ')')
+	eval("__worker_evaluated_function_ = (" + arg + ")"); // eslint-disable-line no-eval
 
 	return __worker_evaluated_function_;
 }
