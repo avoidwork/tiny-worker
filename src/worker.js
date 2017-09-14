@@ -13,10 +13,10 @@ function explode (arg) {
 }
 
 function toFunction (arg) {
-	const args = trim(arg.replace(/^.*\(/, "").replace(/[\t|\r|\n|\"|\']+/g, "").replace(/\).*/, "")),
-		body = trim(arg.replace(/^.*\{/, "").replace(/\}$/, ""));
+	var __worker_evaluated_function_ = null;
+	eval('__worker_evaluated_function_ = (' + arg + ')')
 
-	return Function.apply(Function, explode(args).concat([body]));
+	return __worker_evaluated_function_;
 }
 
 // Bootstraps the Worker
