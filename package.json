@@ -1,6 +1,6 @@
 {
   "name": "tiny-worker",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Tiny WebWorker for Server",
   "main": "lib/index.js",
   "scripts": {
