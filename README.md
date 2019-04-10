@@ -31,7 +31,7 @@ worker.postMessage("Hello World!");
 The worker helper script (helper.js):
 ```javascript
 export const dataFormatter = (data) => {
-  return `${data} World!`;
+	return `${data} World!`;
 };
 ```
 
@@ -40,7 +40,7 @@ The worker script (repeat.js):
 import { dataFormatter } from "./helper";
 
 onmessage = function (ev) {
-  const data = dataFormatter(ev.data);
+	const data = dataFormatter(ev.data);
 	postMessage(data);
 };
 ```
