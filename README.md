@@ -27,6 +27,37 @@ worker.onmessage = function (ev) {
 worker.postMessage("Hello World!");
 ```
 
+#### Enable ES6 import/export within Worker file
+The worker helper script (helper.js):
+```javascript
+export const dataFormatter = (data) => {
+  return `${data} World!`;
+};
+```
+
+The worker script (repeat.js):
+```javascript
+import { dataFormatter } from "./helper";
+
+onmessage = function (ev) {
+  const data = dataFormatter(ev.data);
+	postMessage(data);
+};
+```
+
+The core script:
+```javascript
+var Worker = require("tiny-worker");
+var worker = new Worker("repeat.js", [], {esm: true});
+
+worker.onmessage = function (ev) {
+	console.log(ev.data);
+	worker.terminate();
+};
+
+worker.postMessage("Hello");
+```
+
 #### Creating a Worker from a Function
 ```javascript
 var Worker = require("tiny-worker");

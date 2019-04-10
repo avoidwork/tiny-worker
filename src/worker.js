@@ -13,18 +13,19 @@ function toFunction (arg) {
 
 // Bootstraps the Worker
 process.once("message", obj => {
-	const exp = obj.isfn ? toFunction(obj.input) : fs.readFileSync(obj.input, "utf8");
+	const { isfn, input, esm, cwd } = obj;
+	const exp = isfn ? toFunction(input) : esm ? `require("${input}");` : fs.readFileSync(input, "utf8");
 
 	global.self = {
 		close: () => {
 			process.exit(0);
 		},
 		postMessage: msg => {
-			process.send(JSON.stringify({data: msg}, null, 0));
+			process.send(JSON.stringify({ data: msg }, null, 0));
 		},
 		onmessage: void 0,
 		onerror: err => {
-			process.send(JSON.stringify({error: err.message, stack: err.stack}, null, 0));
+			process.send(JSON.stringify({ error: err.message, stack: err.stack }, null, 0));
 		},
 		addEventListener: (event, fn) => {
 			if (events.test(event)) {
@@ -33,9 +34,9 @@ process.once("message", obj => {
 		}
 	};
 
-	global.__dirname = obj.cwd;
+	global.__dirname = cwd;
 	global.__filename = __filename;
-	global.require = require;
+	global.require = esm ? require("esm")(module) : require;
 
 	global.importScripts = (...files) => {
 		if (files.length > 0) {

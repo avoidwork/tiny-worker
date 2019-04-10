@@ -31,5 +31,7 @@
     "grunt-contrib-watch": "~1.0.0",
     "grunt-eslint": "~19.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "esm": "^3.2.22"
+  }
 }
