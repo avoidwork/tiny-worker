@@ -142,5 +142,5 @@ Returns true if successful.
   * Unix/BSD will work with `SIGTERM`, but if you also need to support Windows use `SIGINT`
 
 ## License
-Copyright (c) 2017 Jason Mulligan
+Copyright (c) 2019 Jason Mulligan
 Licensed under the BSD-3 license
