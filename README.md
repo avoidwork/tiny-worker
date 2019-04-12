@@ -75,6 +75,24 @@ worker.onmessage = function (ev) {
 worker.postMessage("Hello World!");
 ```
 
+#### Creating a Worker from Source
+```javascript
+const source = `
+	onmessage = function (ev) {
+		postMessage(ev.data);
+	};
+`;
+var Worker = require("tiny-worker");
+var worker = new Worker(source, [], { source: true });
+
+worker.onmessage = function(ev) {
+	console.log(ev.data);
+	worker.terminate();
+};
+
+worker.postMessage("Hello World!");
+```
+
 # Debugging
 To be able to debug a child process, it must have a differnt debug port than the parent. 
 Tiny worker does this by adding a random port within a range to the parents debug port.

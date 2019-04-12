@@ -79,7 +79,7 @@ class Worker {
 			}
 		});
 
-		this.child.send({ input: input, isfn: isfn, cwd: options.cwd, esm: options.esm });
+		this.child.send({ input: input, isfn: isfn, cwd: options.cwd, esm: options.esm, source: options.source });
 	}
 
 	static setRange (min, max) {
