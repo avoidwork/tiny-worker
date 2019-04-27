@@ -4,7 +4,7 @@ const fs = require("fs"),
 	noop = require(path.join(__dirname, "noop.js")),
 	events = /^(error|message)$/;
 
-function toFunction (arg) {
+function toFunction(arg) {
 	var __worker_evaluated_function_ = null;
 	eval("__worker_evaluated_function_ = (" + arg + ")"); // eslint-disable-line no-eval
 
@@ -60,9 +60,9 @@ process.once("message", obj => {
 		(global.onerror || global.self.onerror || noop)(err);
 	});
 
-	if (typeof exp === "function") {
-		exp();
-	} else {
-		vm.createScript(exp).runInThisContext();
+	try {
+		typeof exp === "function" ? exp() : vm.createScript(exp).runInThisContext();
+	} catch (err) {
+		(global.onerror || global.self.onerror || noop)(err);
 	}
 });
