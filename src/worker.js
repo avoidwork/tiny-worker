@@ -13,17 +13,8 @@ function toFunction (arg) {
 
 // Bootstraps the Worker
 process.once("message", obj => {
-	const { isfn, input, esm, cwd, source } = obj;
-	let exp;
-	if (isfn) {
-		exp = toFunction(input);
-	} else if (esm) {
-		exp = `require("${input}");`;
-	} else if (source) {
-		exp = input;
-	} else {
-		exp = fs.readFileSync(input, "utf8");
-	}
+	const { isfn, input, esm, cwd } = obj;
+	const exp = isfn ? toFunction(input) : esm ? `require("${input}");` : fs.readFileSync(input, "utf8");
 
 	global.self = {
 		close: () => {
