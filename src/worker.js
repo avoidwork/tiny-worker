@@ -66,3 +66,5 @@ process.once("message", obj => {
 		vm.createScript(exp).runInThisContext();
 	}
 });
+
+process.once("disconnect", () => process.exit());
