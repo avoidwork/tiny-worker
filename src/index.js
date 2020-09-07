@@ -79,14 +79,6 @@ class Worker {
 			}
 		});
 
-		this.expectingSigInt = false;
-
-		this.child.on("exit", (code, signal) => {
-			if (this.expectingSigInt && signal === "SIGINT" || !this.onerror) return;
-			if (code !== 0 && code !== null) this.onerror.call(this, new Error("Exit code " + code));
-			if (signal) this.onerror.call(this, new Error("Terminated with signal " + signal));
-		});
-
 		this.child.send({ input: input, isfn: isfn, cwd: options.cwd, esm: options.esm });
 	}
 
@@ -111,7 +103,6 @@ class Worker {
 	}
 
 	terminate () {
-		this.expectingSigInt = true;
 		this.child.kill("SIGINT");
 	}
 }
