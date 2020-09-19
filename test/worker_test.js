@@ -166,3 +166,68 @@ exports["inline script - __filename"] = {
 		this.worker.postMessage(this.msg);
 	}
 };
+
+exports["inline script - kill"] = {
+	setUp: function (done) {
+		const isWindows = process.platform === "win32";
+		this.worker = new Worker(!isWindows ? function () {
+			self.onmessage = function () {
+				process.kill(process.pid, "SIGSEGV");
+			};
+		} : function () {
+			self.onmessage = function () {
+				process.kill(process.pid, "SIGINT");
+			};
+		});
+		this.msg = !isWindows ? "Terminated with signal SIGSEGV" : "Exit code 1";
+		this.response = "";
+
+		done();
+	},
+	test: function (test) {
+		var self = this;
+
+		test.expect(3);
+		test.notEqual(this.msg, this.response, "Should not match");
+
+		this.worker.onerror = function (err) {
+			self.response = err.message;
+			self.worker.terminate();
+			test.equal(self.msg, self.response, "Should be a match");
+			test.notEqual(err.stack, undefined, "Should not be a match");
+			test.done();
+		};
+
+		this.worker.postMessage(this.msg);
+	}
+};
+
+exports["inline script - exit code"] = {
+	setUp: function (done) {
+		this.worker = new Worker(function () {
+			self.onmessage = function () {
+				process.exit(1);
+			};
+		});
+		this.msg = "Exit code 1";
+		this.response = "";
+
+		done();
+	},
+	test: function (test) {
+		var self = this;
+
+		test.expect(3);
+		test.notEqual(this.msg, this.response, "Should not match");
+
+		this.worker.onerror = function (err) {
+			self.response = err.message;
+			self.worker.terminate();
+			test.equal(self.msg, self.response, "Should be a match");
+			test.notEqual(err.stack, undefined, "Should not be a match");
+			test.done();
+		};
+
+		this.worker.postMessage(this.msg);
+	}
+};
